@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.RoleMapper">
+    <resultMap id="RoleResultMap" type="com.example.demo.entities.Role">
+        <result property="roleId" column="ROLE_ID"></result>
+        <result property="roleName" column="ROLE_NAME"></result>
+        <result property="description" column="DESCRIPTION"></result>
+    </resultMap>
+    <select id="getAllRole" resultMap="RoleResultMap">
+        SELECT ROLE_ID
+             , ROlE_NAME
+             , DESCRIPTION
+        FROM system.F8_ROLE
+    </select>
+
+    <select id="getRoleByID" resultMap="RoleResultMap">
+        SELECT ROLE_ID
+             , ROlE_NAME
+             , DESCRIPTION
+        FROM system.F8_ROLE
+        WHERE ROLE_ID = #{roleId}
+    </select>
+</mapper>

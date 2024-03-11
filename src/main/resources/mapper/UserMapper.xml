@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.UserMapper">
+    <resultMap id="UserResultMap" type="com.example.demo.entities.User">
+        <result property="userId" column="USER_ID"></result>
+        <result property="userName" column="USER_NAME"></result>
+        <result property="age" column="AGE"></result>
+        <result property="gmail" column="GMAIL"></result>
+        <result property="roleId" column="ROLE_ID"></result>
+    </resultMap>
+
+    <select id="getAllUser" resultMap="UserResultMap">
+        SELECT USER_ID
+             , USER_NAME
+             , AGE
+             , GMAIL
+             , ROLE_ID
+             , DESCRIPTION
+        FROM system.F8_USER
+    </select>
+    <select id="isUserExist" resultType="boolean" parameterType="com.example.demo.entities.User">
+        SELECT CASE WHEN EXISTS (
+                SELECT USER_ID
+                FROM system.F8_USER
+                WHERE USER_ID = #{userId}
+        ) THEN 1 ELSE 0 END
+        FROM dual
+    </select>
+
+    <insert id="insertUser" parameterType="com.example.demo.entities.User">
+        INSERT INTO system.F8_USER (USER_ID, USER_NAME, ROLE_ID, AGE, GMAIL)
+        VALUES (#{userId}, #{userName}, #{roleId}, #{age}, #{gmail})
+    </insert>
+
+    <update id="updateUser" parameterType="com.example.demo.entities.User">
+        UPDATE system.F8_USER
+        SET USER_NAME = #{userName}
+          , AGE = #{age}
+        WHERE USER_ID = #{userId}
+    </update>
+
+    <delete id="deleteUser" parameterType="com.example.demo.entities.User">
+        DELETE
+        FROM system.F8_USER
+        WHERE USER_ID = #{userId}
+    </delete>
+</mapper>

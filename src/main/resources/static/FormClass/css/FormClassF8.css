@@ -1,0 +1,64 @@
+#formDetail{
+    background-color: #F4F4F4;
+}
+
+#titleLeft, #titleRight{
+    font-size: 25px;
+    color: red;
+}
+
+#titleLeft:hover{
+    font-size: 35px;
+    color: blue;
+    cursor: pointer;
+}
+
+#titleRight:hover{
+    font-size: 40px;
+    color: pink;
+    cursor: pointer;
+}
+
+tr:hover{
+    font-size: 15px;
+    cursor: pointer;
+}
+
+#tableListUser_filter{
+    float: right;
+}
+
+#tableListUser_paginate{
+    float: left;
+}
+
+#tableListUser_paginate a{
+    margin: 10px;
+    text-decoration: none;
+}
+
+#tableListUser_paginate a:hover{
+    cursor: pointer;
+    background-color: darkgrey;
+    color: white;
+}
+
+#tableListRole_filter{
+    float: right;
+}
+
+#tableListRole_paginate{
+    float: left;
+}
+
+#tableListRole_paginate a{
+    margin: 10px;
+    text-decoration: none;
+}
+
+#tableListRole_paginate a:hover{
+    cursor: pointer;
+    background-color: darkgrey;
+    color: white;
+}
+
