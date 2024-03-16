@@ -10,14 +10,18 @@
     </resultMap>
 
     <select id="getAllUser" resultMap="UserResultMap">
-        SELECT USER_ID
-             , USER_NAME
-             , AGE
-             , GMAIL
-             , ROLE_ID
-             , DESCRIPTION
-        FROM system.F8_USER
+        SELECT    US.USER_ID
+             ,US.USER_NAME
+             ,US.AGE
+             ,US.GMAIL
+             ,US.DESCRIPTION
+             ,RL.ROLE_ID
+             ,RL.ROLE_NAME
+        FROM system.F8_USER US
+                 LEFT JOIN system.F8_ROLE RL ON US.ROLE_ID = RL.ROLE_ID
+        ORDER BY US.USER_ID
     </select>
+
     <select id="isUserExist" resultType="boolean" parameterType="com.example.demo.entities.User">
         SELECT CASE WHEN EXISTS (
                 SELECT USER_ID
@@ -28,14 +32,17 @@
     </select>
 
     <insert id="insertUser" parameterType="com.example.demo.entities.User">
-        INSERT INTO system.F8_USER (USER_ID, USER_NAME, ROLE_ID, AGE, GMAIL)
-        VALUES (#{userId}, #{userName}, #{roleId}, #{age}, #{gmail})
+        INSERT INTO system.F8_USER (USER_ID, USER_NAME, ROLE_ID, AGE, GMAIL, DESCRIPTION)
+        VALUES (#{userId}, #{userName}, #{roleId}, #{age}, #{gmail}, #{description})
     </insert>
 
     <update id="updateUser" parameterType="com.example.demo.entities.User">
         UPDATE system.F8_USER
         SET USER_NAME = #{userName}
           , AGE = #{age}
+          , GMAIL = #{gmail}
+          , ROLE_ID = #{roleId}
+           ,DESCRIPTION = #{description}
         WHERE USER_ID = #{userId}
     </update>
 
