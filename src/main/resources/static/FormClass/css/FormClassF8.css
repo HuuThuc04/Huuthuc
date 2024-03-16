@@ -7,25 +7,22 @@
     color: red;
 }
 
-#titleLeft:hover{
+#titleLeft{
     font-size: 35px;
-    color: blue;
-    cursor: pointer;
+
 }
 
-#titleRight:hover{
+#titleRight{
     font-size: 40px;
-    color: pink;
-    cursor: pointer;
 }
 
 tr:hover{
-    font-size: 15px;
     cursor: pointer;
 }
 
 #tableListUser_filter{
     float: right;
+    margin-bottom: 15px;
 }
 
 #tableListUser_paginate{
@@ -39,12 +36,11 @@ tr:hover{
 
 #tableListUser_paginate a:hover{
     cursor: pointer;
-    background-color: darkgrey;
-    color: white;
+    color: red;
 }
 
 #tableListRole_filter{
-    float: right;
+    float: left;
 }
 
 #tableListRole_paginate{
@@ -62,3 +58,26 @@ tr:hover{
     color: white;
 }
 
+/* CSS để vô hiệu hóa chọn văn bản */
+#tableListUser tbody tr {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+#tableListUser_filter{
+    display: none;
+}
+
+ .form-control:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+button.input-group-text:hover{
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+input.form-control{
+
+}

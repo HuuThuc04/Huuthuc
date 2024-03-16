@@ -1,47 +1,11 @@
 class FormClassF8 {
+
     loadInit = async () => {
         await this.getDataUser();
         this.createTableListUser(this.listUserIn4);
     }
 
-    loadInitForRole = async () => {
-        await this.getDataRole();
-        this.createTableListRole(this.listRoleIn4);
-    }
 
-    listRoleIn4 = [];
-
-    createTableListRole = (listRoleInformation) => {
-        let tbodyContentString = '';
-        listRoleInformation.forEach(e => {
-            tbodyContentString +=
-                '<tr>' +
-                `<th scope="row">${e.roleId}</th>` +
-                `<td>${e.roleName}</td>` +
-                `<td>${e.description}</td>` +
-                `</tr>`;
-        });
-
-        // Jquery
-        $('#tbodyTableListRoleContent').html(tbodyContentString);
-        let table = new DataTable('#tableListRole', {
-            info: false,
-            paging: true,
-            ordering: false,
-            lengthMenu: [
-                [4, 5, 6, -1],
-                [4, 5, 6, 'All']
-            ]
-        });
-
-        const labelElement = document.querySelector('#tableListRole_length');
-        labelElement.innerHTML = '';
-        table.on('dblclick', 'tbody tr', function (x) {
-            let data = table.row(this).data();
-            $('#roleId').val(data[0]);
-            $('#roleName').val(data[1]);
-        });
-    };
 
     listUserIn4 = [];
 
@@ -52,16 +16,22 @@ class FormClassF8 {
                 '<tr>' +
                 `<th scope="row">${e.userId}</th>` +
                 `<td>${e.userName}</td>` +
-                `<td>${e.role.roleId}</td>` +
+                `<td>${e.roleId}</td>` +
                 `<td>${e.role.roleName}</td>` +
                 `<td>${e.age}</td>` +
                 `<td>${e.gmail}</td>` +
-                `<td>${e.role.description}</td>` +
+                `<td>${e.description}</td>` +
                 `</tr>`;
         });
 
 
+
+
         // Jquery
+        if ($.fn.DataTable.isDataTable('#tableListUser')) {
+            $('#tableListUser').DataTable().destroy();
+        }
+
         $('#tbodyTableLisUserContent').html(tbodyContentString);
         let table = new DataTable('#tableListUser', {
             info: false,
@@ -75,15 +45,21 @@ class FormClassF8 {
 
         const labelElement = document.querySelector('#tableListUser_length');
         labelElement.innerHTML = '';
-        table.on('dblclick', 'tbody tr', function (x) {
-                let data = table.row(this).data();
-            $('#userId').val(data[0]);
-            $('#userName').val(data[1]);
-            $('#roleId').val(data[2]);
-            $('#age').val(data[4]);
-            $('#gmail').val(data[5]);
+        table.on('dblclick', 'tbody tr', function(x) {
+            let data = table.row(this).data();
+            if (data && data.length > 0) {
+                $('#userId').val(data[0] || '');
+                $('#userName').val(data[1] || '');
+                $('#roleId').val(data[2] || '');
+                $('#age').val(data[4] || '');
+                $('#gmail').val(data[5] || '');
+                $('#description').val(data[6] || '');
+            }
         });
     };
+
+
+
 
     rowLicked = (x) => {
         // kiểu dữ liệu Json {key: value}
@@ -95,7 +71,9 @@ class FormClassF8 {
             userName: x.querySelector('td:nth-child(2)').textContent,
             roleId: x.querySelector('td:nth-child(3)').textContent,
             age: x.querySelector('td:nth-child(5)').textContent,
-            gmail: x.querySelector('td:nth-child(6)').textContent
+            gmail: x.querySelector('td:nth-child(6)').textContent,
+            description: x.querySelector('td:nth-child(7)').textContent
+
         };
         this.fillFormInformation(userIn4);
     };
@@ -106,19 +84,76 @@ class FormClassF8 {
         $('#roleId').val(userIn4.roleId);
         $('#age').val(userIn4.age);
         $('#gmail').val(userIn4.gmail);
+        $('#description').val(userIn4.description);
     }
 
     btnClearForm_click = async () => {
-        this.fillFormInformation({userId: '', userName: '',roleId: '' , age: '', gmail: ''})
+        this.fillFormInformation({userId: '', userName: '',roleId: '' , age: '', gmail: '', description: ''})
     }
+
+    btnDelete_click = async () => {
+        const userIdToDelete = $('#userId').val();
+
+        if (!userIdToDelete) {
+            swal({
+                text: 'Please select a user to delete.',
+                icon: 'warning'
+            });
+            return;
+        }
+
+        const confirmDelete = await swal({
+            text: 'Are you sure you want to delete this user?',
+            icon: 'warning',
+            buttons: true,
+            dangerMode: true,
+        });
+
+        if (confirmDelete) {
+            try {
+                let dataForm = {
+                    userId: $('#userId').val(),
+                    userName: $('#userName').val(),
+                    roleId: $('#roleId').val(),
+                    age: $('#age').val(),
+                    gmail: $('#gmail').val(),
+                    description: $('#description').val()
+                }
+                // Gửi yêu cầu DELETE đến API để xóa dữ liệu
+                const response = await axios.delete(`http://localhost:8888/api/v1/users/deleteUser`, {data: dataForm});
+
+                if (response.data.status) {
+                    await this.loadInit();
+                    swal({
+                        text: response.data.message,
+                        icon: 'success'
+                    });
+                } else {
+                    await this.loadInit();
+                    swal({
+                        text: response.data.message,
+                        icon: 'warning'
+                    });
+                }
+            } catch (error) {
+                console.error('Error deleting user:', error);
+                swal({
+                    text: 'An error occurred while deleting the user.',
+                    icon: 'error'
+                });
+            }
+        }
+    };
 
     btnSave_click = async () => {
         let dataForm = {
             userId: $('#userId').val(),
             userName: $('#userName').val(),
             roleId: $('#roleId').val(),
+            roleName: $('#roleName').val(),
             age: $('#age').val(),
-            gmail: $('#gmail').val()
+            gmail: $('#gmail').val(),
+            description: $('#description').val()
         }
         let validate = this. validateDataFormUser(dataForm);
         if(!validate.status){
@@ -147,9 +182,6 @@ class FormClassF8 {
         }
     };
 
-
-
-
     validateDataFormUser = (userIn4) => {
         // nếu userIn4 != null || != undefined => true
         // ! => nếu userIn4 == null || == undefined => true
@@ -166,7 +198,6 @@ class FormClassF8 {
             }
         }
     };
-
     //Call Api by Ajax of Jquery
     // getDataUserIn4 = () => {
     //     $.ajax({
@@ -185,23 +216,12 @@ class FormClassF8 {
 
     // Axios
     getDataUser = async () => {
-        console.log("getDataUser");
+        console.table("getDataUser");
         let {data: response} = await axios.get('http://localhost:8888/api/v1/users/getAllUser')
         this.listUserIn4 = response.data;
-        console.log(this.listUserIn4);
-    }
-
-    getDataRole = async () => {
-        console.log("getDataRole");
-        let {data: response} = await axios.get('http://localhost:8888/api/v1/roles/getAllRole')
-        this.listRoleIn4 = response.data;
-        console.log(this.listRoleIn4);
-    }
-
-
-
+        console.table(this.listUserIn4);
+   }
 }
-
 
 
 

@@ -13,6 +13,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("${api.prefix}/users")
 public class UserApi {
+
     @Autowired
     UserService userService;
 
