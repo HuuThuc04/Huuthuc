@@ -3,6 +3,7 @@ class FormClassF8 {
     loadInit = async () => {
         await this.getDataUser();
         this.createTableListUser(this.listUserIn4);
+        await this.createComponentSelectRole();
     }
 
 
@@ -17,7 +18,7 @@ class FormClassF8 {
                 `<th scope="row">${e.userId}</th>` +
                 `<td>${e.userName}</td>` +
                 `<td>${e.roleId}</td>` +
-                `<td>${e.role.roleName}</td>` +
+                `<td>${(e.role) ? e.role.roleName : ""}</td>` +
                 `<td>${e.age}</td>` +
                 `<td>${e.gmail}</td>` +
                 `<td>${e.description}</td>` +
@@ -221,6 +222,22 @@ class FormClassF8 {
         this.listUserIn4 = response.data;
         console.table(this.listUserIn4);
    }
+
+   createComponentSelectRole = async () => {
+        // Call API to get Data Role
+       let {data: dataRole} = await axios.get("/api/v1/roles/getAllRole");
+
+       if(dataRole.status){
+           // Create Component Role
+           let componentRoleString = `<select id="roleId" class="form-select">`;
+           dataRole.data.forEach( (e) => {
+               componentRoleString += `<option value="${e.roleId}">${e.roleName}</option>`
+           });
+           componentRoleString +=`</select>`;
+           $("#componentSelectRole").html(componentRoleString)
+       }
+   }
+
 }
 
 

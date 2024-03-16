@@ -18,7 +18,7 @@
              ,RL.ROLE_ID
              ,RL.ROLE_NAME
         FROM system.F8_USER US
-                 JOIN system.F8_ROLE RL ON US.ROLE_ID = RL.ROLE_ID
+                 LEFT JOIN system.F8_ROLE RL ON US.ROLE_ID = RL.ROLE_ID
         ORDER BY US.USER_ID
     </select>
 
